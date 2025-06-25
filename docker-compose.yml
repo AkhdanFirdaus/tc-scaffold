@@ -1,6 +1,34 @@
 services:
-  engine:
-    container_name: traversal-engine
+  csrf-engine:
+    build:
+      context: ./csrf-engine
+      dockerfile: Dockerfile
+    ports:
+      - "5001:8000"
+    env_file:
+      - .env
+    environment:
+      - PORT=5001
+      - HOST=0.0.0.0
+    networks:
+      - test-case-generation
+
+  lfi-engine:
+    build:
+      context: ./lfi-engine
+      dockerfile: Dockerfile
+    ports:
+      - "5002:5000"
+    volumes:
+      - ./lfi-engine:/app
+    environment:
+      - FLASK_ENV=development 
+      - HOST=localhost
+      - PORT=5000
+    networks:
+      - test-case-generation
+
+  traversal-engine:
     build: 
       context: ./traversal-engine
       dockerfile: Dockerfile
@@ -8,19 +36,36 @@ services:
     ports:
       - "5003:8080"
     volumes:
-      - ./src:/app/src
-      - ./logs:/app/logs
-      - ./outputs:/app/outputs
-      - ./tmp:/tmp
+      - ./traversal-engine/src:/app/src
+      - ./traversal-engine/logs:/app/logs
+      - ./traversal-engine/outputs:/app/outputs
+      - ./traversal-engine/tmp:/tmp
     env_file:
       - .env
     environment:
       - XDEBUG_MODE=coverage,debug
-      - TZ=Asia/Jakarta
     networks:
-      - traversal
+      - test-case-generation
   
   server:
     build:
-      context: ./traversal-server
+      context: ./server
       dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - test-case-generation
+    volumes:
+      - ./server:/app
+    env_file:
+      - .env
+    depends_on:
+      - csrf-engine
+      - lfi-engine
+      - traversal-engine
+
+networks:
+  test-case-generation:
+
+volumes:
+  logs:

@@ -3,11 +3,15 @@
 # Define repositories and target directories
 REPOS=(
   "https://github.com/AkhdanFirdaus/traversal-socket-sample.git"
+  "https://gitlab.com/mutagen/mutagen.git"
+  "https://github.com/DwiHandoyo/mutant-killer-alpha-2.git"
   "https://github.com/AkhdanFirdaus/traversal-services.git"
 )
 
 DIRS=(
-  "traversal-server"
+  "server"
+  "csrf-engine"
+  "lfi-engine"
   "traversal-engine"
 )
 

@@ -1,4 +1,4 @@
-traversal-server
-traversal-engine
+server
+*-engine
 
 .env
