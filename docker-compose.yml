@@ -1,0 +1,26 @@
+services:
+  engine:
+    container_name: traversal-engine
+    build: 
+      context: ./traversal-engine
+      dockerfile: Dockerfile
+    command: ['php', '-S', "0.0.0.0:8080", "/app/main_server.php"]
+    ports:
+      - "5003:8080"
+    volumes:
+      - ./src:/app/src
+      - ./logs:/app/logs
+      - ./outputs:/app/outputs
+      - ./tmp:/tmp
+    env_file:
+      - .env
+    environment:
+      - XDEBUG_MODE=coverage,debug
+      - TZ=Asia/Jakarta
+    networks:
+      - traversal
+  
+  server:
+    build:
+      context: ./traversal-server
+      dockerfile: Dockerfile
