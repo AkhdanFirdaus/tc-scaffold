@@ -47,16 +47,17 @@ services:
     networks:
       - test-case-generation
   
-  server:
+  app:
     build:
-      context: ./server
+      context: ./app
       dockerfile: Dockerfile
+    command: ['npm', 'run', 'dev']
     ports:
+      - "8080:8080"
       - "3000:3000"
+      - "3001:3001"
     networks:
       - test-case-generation
-    volumes:
-      - ./server:/app
     env_file:
       - .env
     depends_on:
